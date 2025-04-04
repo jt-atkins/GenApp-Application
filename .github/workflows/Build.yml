@@ -18,8 +18,8 @@ env:
     application: ${{ github.event.repository.name }}
     pipelineType: ${{ inputs.pipelineType }}
     packageName: ${{github.run_id}}
-    zosHostname: lpar.dev.ibm.com
-    zosSFTPUser: GITHUB@lpar.dev.ibm.com
+    zosHostname: 9.76.61.15
+    zosSFTPUser: DMJTA1@9.76.61.15
 
 jobs:
     Setup:
