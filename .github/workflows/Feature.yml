@@ -20,7 +20,20 @@ env:
     packageName: ${{github.run_id}}
     zosHostname: 9.76.61.15
     zosSFTPUser: DMJTA1@9.76.61.15
-     
+    
+    UCD_Package: /u/DMJTA1/zAppBuild/scripts/PublishUCD.sh
+    UCD_Deploy: /u/DMJTA1/zAppBuild/scripts/DeployUCD.sh
+    UCD_Server_URL: https://9.76.61.225:8443
+    UCD_AppProps: /u/DMJTA1/zAppBuild/dbb-zappbuild-final/GenappML2.properties
+    UCD_AppDeployProcess: Deploy
+    UCD_backendComponent: App1-Genapp-ZComponent
+    UCD_APIComponent: App1-Genapp-API
+    UCD_TestComponent: App1-Genapp-Test
+    UCDApplication: App1-Genapp
+    UCD_Dev_LPAR: 'DEV'
+    UCD_Test_LPAR: 'TEST'
+    UCD_Prod_LPAR: 'PROD'
+    UCD_PreProd_LPAR: 'PRE-PROD'
 
 jobs:
     Setup:
@@ -57,7 +70,8 @@ jobs:
             mkdir "${{ runner.temp }}/build-logs" 
             sftp ${{env.zosSFTPUser}}:${{ env.uniqueWorkspaceId }}/*.tar "\"${{ runner.temp }}/build-logs\""
             tar -xvf "${{ runner.temp }}/build-logs/logs.tar" -C "${{ runner.temp }}/build-logs"
-        
+          shell: cmd
+                  
         - name: Upload build logs
           uses: actions/upload-artifact@v4
           with:
@@ -71,8 +85,11 @@ jobs:
         runs-on: self-hosted
         steps:
          - name: Package build outputs
-           run: ssh ${{env.zosSFTPUser}} ". ./.profile && packageBuildOutputs.sh -w ${{ env.uniqueWorkspaceId }} -t ${{ env.application }}.tar -a ${{ env.application }} -b ${{ env.branch }} -p ${{env.pipelineType}} -v ${{ env.packageName }} "
-
+           run: ssh ${{env.zosSFTPUser}} ". ./.profile && ucdPackaging.sh -w ${{ env.uniqueWorkspaceId }} -v "v${{ github.run_number }}-${{ github.sha }}" -e externalRepo.properties -f packaging.properties -c ${{ UCD_backendComponent }}
+           # run: ssh ${{env.zosSFTPUser}} ". ./.profile && packageBuildOutputs.sh -w ${{ env.uniqueWorkspaceId }} -t ${{ env.application }}.tar -a ${{ env.application }} -b ${{ env.branch }} -p ${{env.pipelineType}} -v ${{ env.packageName }} "
+           # run: ${{ env.zosSFTPUser }} ${{ env.UCD_Package }} ${{ env.UCD_backendComponent }}  ${{ env.MyWorkDir }} ${{ env.UCD_AppProps }} ${{ steps.getBranch.outputs.value }}.Build.${{ github.run_number }}
+           shell: cmd      
+         
     Cleanup:
         needs:
           - Package
