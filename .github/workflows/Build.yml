@@ -61,6 +61,7 @@ jobs:
                 name: build_logs_${{github.run_number }}                        # Name used for artifact when it is uploaded
                 path: ${{ runner.temp }}/build-logs                             # Path to build logs artifacts
                 retention-days: 1
+            shell: cmd
     
     Package:
         needs: Build
@@ -68,12 +69,12 @@ jobs:
         steps:
           - name: Package build outputs
             run: ssh ${{ env.zosSFTPUser}} ". ./.profile && packageBuildOutputs.sh -w ${{ env.uniqueWorkspaceId }} -t ${{ env.application }}.tar -a ${{ env.application }} -b ${{ env.branch }} -p ${{env.pipelineType}} -v ${{ env.packageName }} "
+        shell: cmd
 
     Deploy-integration:
         needs: Package
         runs-on: self-hosted
         steps:
-
           - name: Generate deployment plan 
             run: ssh ${{ env.zosSFTPUser}} ". ./.profile && mkdir -p ${{ env.uniqueWorkspaceId }}/deployPkgDir/deploy-logs && wazideploy-generate.sh -w ${{ env.uniqueWorkspaceId }} -i ${{ env.application }}.tar -r deploy-logs/deployment-plan-report.html"
             
@@ -94,12 +95,12 @@ jobs:
               path: ${{ runner.temp }}/deploy-logs                        # Path to build logs artifacts
               retention-days: 1
 
-#    Cleanup:
-#        needs:
-#            - Deploy-integration
-#        runs-on: self-hosted
-#        if: always()
-#        steps:
-#            - name: Cleanup Build Environment
-#              run: ssh ${{ env.zosSFTPUser}} ". ./.profile && deleteWorkspace.sh -w ${{ env.uniqueWorkspaceId }}"
+    Cleanup:
+        needs:
+            - Deploy-integration
+        runs-on: self-hosted
+        if: always()
+        steps:
+            - name: Cleanup Build Environment
+              run: ssh ${{ env.zosSFTPUser}} ". ./.profile && deleteWorkspace.sh -w ${{ env.uniqueWorkspaceId }}"
             
