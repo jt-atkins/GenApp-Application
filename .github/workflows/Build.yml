@@ -61,7 +61,7 @@ jobs:
                 name: build_logs_${{github.run_number }}                        # Name used for artifact when it is uploaded
                 path: ${{ runner.temp }}/build-logs                             # Path to build logs artifacts
                 retention-days: 1
-            shell: cmd
+            
     
     Package:
         needs: Build
