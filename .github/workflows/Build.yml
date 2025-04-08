@@ -69,7 +69,7 @@ jobs:
         runs-on: self-hosted
         steps:
           - name: Package build outputs
-            run: ssh ${{env.zosSFTPUser}} ". ./.profile && ucdPackaging.sh -w ${{ env.uniqueWorkspaceId }} -v v${{ github.run_number }}-${{ github.sha }} -e externalRepo.properties -f packaging.properties -c App1-Genapp-ZComponent"
+            run: ssh ${{env.zosSFTPUser}} ". ./.profile && ucdPackaging.sh -w ${{ env.uniqueWorkspaceId }} -v v${{ github.run_number }}-${{ github.sha }} -e /u/DMJTA1/workspace/dbb/Templates/Common-Backend-Scripts/externalRepo.properties -f /u/DMJTA1/workspace/dbb/Templates/Common-Backend-Scripts/packaging.properties -c App1-Genapp-ZComponent"
           #  run: ssh ${{ env.zosSFTPUser}} ". ./.profile && packageBuildOutputs.sh -w ${{ env.uniqueWorkspaceId }} -t ${{ env.application }}.tar -a ${{ env.application }} -b ${{ env.branch }} -p ${{env.pipelineType}} -v ${{ env.packageName }} "
     
     Deploy-integration:
