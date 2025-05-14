@@ -19,7 +19,7 @@ env:
     application: ${{ github.event.repository.name }}
     packageName: ${{github.run_id}}
     zosHostname: 9.76.61.15
-    zosSFTPUser: DMJTA1@9.76.61.15
+    zosSFTPUser: DMJTA1@WTSC47.CPOLAB.IBM.COM
     
     UCD_Package: /u/DMJTA1/zAppBuild/scripts/PublishUCD.sh
     UCD_Deploy: /u/DMJTA1/zAppBuild/scripts/DeployUCD.sh
