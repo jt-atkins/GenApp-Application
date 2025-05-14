@@ -19,7 +19,7 @@ env:
     pipelineType: ${{ inputs.pipelineType }}
     packageName: ${{github.run_id}}
     zosHostname: 9.76.61.15
-    zosSFTPUser: DMJTA1@9.76.61.15
+    zosSFTPUser: DMJTA1@WTSC47.CPOLAB.IBM.COM
 
 jobs:
     Setup:
